@@ -1,21 +1,30 @@
 
--- Function to set the mouse cursor to the center of the current window
-function centerMouseOnActiveWindow()
-    window = hs.window.focusedWindow()
-    hs.mouse.absolutePosition(window:frame().center)
-end
+local hyper = { "ctrl", "cmd", "alt" }
+
+hs.hotkey.bind(hyper, "Y", hs.toggleConsole)
 
 
--- Simple hello world example - TODO - remove!
-hs.hotkey.bind({"cmd", "alt", "ctrl"}, "W", function()
-    hs.alert.show("Hello World!")
+-- Leader key binds
+-- TODO - this conflicts with shortcut in vscode - choose another leader
+local leader = hs.hotkey.modal.new("cmd", "\\")
+
+leader:bind("", "escape", function()
+    leader:exit()
 end)
 
--- Bind a key to toggle the hammerspoon console
-hs.hotkey.bind({ "ctrl", "cmd", "alt" }, "Y", hs.toggleConsole)
+leader:bind("", "c", function()
+    -- Center the mouse on the active window
+    local window = hs.window.focusedWindow()
+    hs.mouse.absolutePosition(window:frame().center)
+end)
 
--- Bind a key to reload the hammerspoon config
-hs.hotkey.bind({ "ctrl", "cmd", "alt" }, "R", hs.reload)
+leader:bind("", "r", function()
+    -- Clear the console and reload config
+    hs.console.clearConsole()
+    hs.reload()
+end)
 
--- Bind a key to center the mouse on the current window
-hs.hotkey.bind({ "ctrl", "cmd", "alt" }, "C", centerMouseOnActiveWindow)
+leader:bind("", "y", function()
+    -- Show/hide the console
+    hs.toggleConsole()
+end)
